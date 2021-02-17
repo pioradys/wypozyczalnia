@@ -1,0 +1,25 @@
+﻿
+
+CREATE TABLE klient (imie varchar(20) not null, nazwisko varchar(40) not null,id_klienta serial primary key);
+CREATE TABLE statek ( nazwa varchar(20) not null,id_statku serial primary key);
+CREATE TABLE przedmioty ( przedmiot varchar(20) ,id_przedmiotu serial primary key);
+CREATE TABLE wypozyczenie(
+	kto_wypozyczyl int not null REFERENCES klient ON DELETE
+	RESTRICT ON UPDATE RESTRICT, 
+	co_wypozyczyl int not null REFERENCES statek ON DELETE
+	RESTRICT ON UPDATE CASCADE);
+CREATE TABLE wyposazenie(id_statku int not null REFERENCES statek ON DELETE
+	RESTRICT ON UPDATE RESTRICT, 
+	id_przedmiotu int not null REFERENCES przedmioty ON DELETE
+	RESTRICT ON UPDATE CASCADE,
+	id_wyposazenia serial primary key);
+select imie,nazwisko,nazwa from klient,statek,wypozyczenie
+	where klient.id_klienta=wypozyczenie.kto_wypozyczyl and wypozyczenie.co_wypozyczyl=statek.id_statku;
+select nazwa,przedmiot from przedmioty,statek,wyposazenie where wyposazenie.id_statku=statek.id_statku and wyposazenie.id_przedmiotu=przedmioty.id_przedmiotu;
+
+
+
+
+
+
+

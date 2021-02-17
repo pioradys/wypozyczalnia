@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>Edytuj przedmiot</title>
+</head>
+<body>
+<h1> Edytuj przedmiot </h1>
+<?php
+// tu umieszczamy kod skryptu
+//po pierwsze – odbierzmy parametry dla skryptu przekazane
+//metodą //POST – uzyjemy je w zapytaniu ponizej
+
+@$id_przedmiotu= $_POST['id_przedmiotu'];
+@$przedmiot = $_POST['przedmiot'];
+$dbh = pg_connect("dbname=projekt_pradys user=pradys
+password=bazydanych host=localhost") or die("Nie moge
+polaczyc sie z baza danych ! ");
+// tu powinno byc polaczenie
+// wykonajmy zapytanie – najpierw wyswietlmy dane
+$query = "SELECT przedmiot from przedmioty where id_przedmiotu=$id_przedmiotu";
+$wynik = pg_query($query);
+echo "<form action=eprzed.php method=post>";
+echo "<table border width=1>";
+echo "<tr>";
+echo "<td>";
+echo "nazwa";
+echo "</td>";
+echo "<td>";
+echo "<input type=text name=przedmiot>";
+echo "</td>";
+echo "</table>";
+echo "<input type=hidden name=id_przedmiotu value=$id_przedmiotu>";
+echo "<input type=submit name=zmien value=zmien>";
+echo "</form>";
+if ($zm = 'zmien')
+{
+$query = "UPDATE przedmioty SET przedmiot='$przedmiot' where id_przedmiotu=$id_przedmiotu";
+$wynik = pg_query($query);
+// sprawdzmy ile wierszy podmieniono
+echo " Edytowano l osobe <br /> \n";
+}
+pg_close($dbh);
+echo "<form action=main.php method=post>
+<input type=submit name=przedmiot value=OK>
+</form>";
+?>
+</body>
+</html>

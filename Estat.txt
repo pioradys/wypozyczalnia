@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>Edytuj statek</title>
+</head>
+<body>
+<h1> Edytuj statek </h1>
+<?php
+// tu umieszczamy kod skryptu
+//po pierwsze – odbierzmy parametry dla skryptu przekazane
+//metodą //POST – uzyjemy je w zapytaniu ponizej
+@$id_statku = $_POST['id_statku'];
+@$nazwa = $_POST['nazwa'];
+$dbh = pg_connect("dbname=projekt_pradys user=pradys
+password=bazydanych host=localhost") or die("Nie moge
+polaczyc sie z baza danych ! ");
+// tu powinno byc polaczenie
+// wykonajmy zapytanie – najpierw wyswietlmy dane
+$query = "SELECT nazwa from statek where id_statku=$id_statku";
+$wynik = pg_query($query);
+echo "<form action=estat.php method=post>";
+echo "<table border width=1>";
+echo "<tr>";
+echo "<td>";
+echo "nazwa";
+echo "</td>";
+echo "<td>";
+echo "<input type=text name=nazwa>";
+echo "</td>";
+echo "</table>";
+echo "<input type=hidden name=id_statku value=$id_statku>";
+echo "<input type=submit name=zmien value=zmien>";
+echo "</form>";
+if ($zm = 'zmien')
+{
+$query = "UPDATE statek SET nazwa='$nazwa' where id_statku=$id_statku";
+$wynik = pg_query($query);
+// sprawdzmy ile wierszy podmieniono
+echo " Edytowano l osobe <br /> \n";
+}
+pg_close($dbh);
+echo "<form action=main.php method=post>
+<input type=submit name=nazwa value=OK>
+</form>";
+
+?>
+</body>
+</html>

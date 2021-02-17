@@ -1,0 +1,54 @@
+<html>
+<head>
+<title>Edytuj wyposazenie</title>
+</head>
+<body>
+<h1> Edytuj wyposazenie</h1>
+<?php
+// tu umieszczamy kod skryptu
+//po pierwsze – odbierzmy parametry dla skryptu przekazane
+//metodą //POST – uzyjemy je w zapytaniu ponizej
+@$id_wyposazenia=$_POST['id_wyposazenia'];
+@$id_statku = $_POST['id_statku'];
+@$id_przedmiotu = $_POST['id_przedmiotu'];
+$dbh = pg_connect("dbname=projekt_pradys user=pradys
+password=bazydanych host=localhost") or die("Nie moge
+polaczyc sie z baza danych ! ");
+// tu powinno byc polaczenie
+// wykonajmy zapytanie – najpierw wyswietlmy dane
+$query = "SELECT id_przedmiotu,id_statku from wyposazenie where id_wyposazenie=$id_wyposazenia";
+$wynik = pg_query($query);
+echo "<form action=estat.php method=post>";
+echo "<table border width=1>";
+echo "<tr>";
+echo "<td>";
+echo "id_statku";
+echo "</td>";
+echo "<td>";
+echo "<input type=text name=id_statku>";
+echo "</td>";
+echo "<td>";
+echo "id_przedmiotu";
+echo "</td>";
+echo "<td>";
+echo "<input type=text name=id_przedmiotu>";
+echo "</td>";
+echo "</table>";
+echo "<input type=hidden name=id_statku value=$id_wyposazenia>";
+echo "<input type=submit name=zmien value=zmien>";
+echo "</form>";
+if ($zm = 'zmien')
+{
+$query = "UPDATE wyposazenie SET id_przedmiotu=$id_przedmiotu and id_statku=$id_statku where id_wyposazenia=$id_wyposazenia";
+$wynik = pg_query($query);
+// sprawdzmy ile wierszy podmieniono
+echo " Edytowano l wyposazenie <br /> \n";
+}
+pg_close($dbh);
+echo "<form action=main.php method=post>
+<input type=submit name=id_wyposazenia value=OK>
+</form>";
+
+?>
+</body>
+</html>

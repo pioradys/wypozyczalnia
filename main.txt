@@ -1,0 +1,165 @@
+<html>
+<head>
+<title>STATKI</title>
+</head>
+<body>
+<?php
+// tu umieszczamy kod skryptu
+//po pierwsze – odbierzmy parametry dla skryptu przekazane
+//metod¹ //POST – uzyjemy je w zapytaniu ponizej
+// Po³¹czmy siê z baz¹ danych i roz³¹czmy siê z ni¹
+$dbh = pg_connect("dbname=projekt_pradys user=pradys
+password=bazydanych host=localhost") or die("Nie moge
+polaczyc sie z baza danych ! ");
+// tu powinno byc polaczenie
+// wykonajmy zapytanie
+//$wynik = pg_query($dbh,$query);
+// wyœwietlmy dane
+W celu dodania trzeba wpisac odpowiednie dane do formularza ponizej tabeli, w celu edycji ktorejs tabeli nalezy kliknac
+przycisk edytuj przy wierszy, ktory chcemy zedytowac i umiescic odpowiednie dane, w przypadku tabeli z wyposazeniem 
+numer przedmiotu i numer statku, w przypadku pozostalych tabel nalezy wpisac tylko nazwe.
+W celu usuniecia jakichs danych nalezy kliknac przycisk usun w odpowiednim wierszu.
+$query = "select nazwa,przedmiot,id_wyposazenia from przedmioty,statek,wyposazenie where wyposazenie.id_statku=statek.id_statku and wyposazenie.id_przedmiotu=przedmioty.id_przedmiotu;";
+$wynik = pg_query($dbh,$query);
+// odbierzmy rozmiary tabeli:
+$liczba_kolumn = pg_num_fields($wynik);
+$liczba_wierszy = pg_num_rows($wynik);
+// teraz wyœwietlmy dane
+echo "<TABLE border width=1>";
+echo "<TABLE border width=1>";
+echo "<TR>";
+for($k =0;$k<$liczba_kolumn;$k++)
+{
+echo "<TD>";
+echo pg_field_name($wynik,$k);
+echo "</TD>"; //echo "\t";
+}
+echo "<td>Usun</td><td>Edytuj</td></TR>";
+for($w =0;$w<$liczba_wierszy;$w++)
+{
+echo "<TR>";
+for($k =0;$k<$liczba_kolumn;$k++)
+{
+echo "<TD>";
+echo pg_fetch_result($wynik,$w,$k);
+echo "</TD>"; //echo "\t";
+}
+$idos = pg_fetch_result($wynik,$w,$liczba_kolumn-1);
+// tu dodajemy formularz do usuwania osoby
+echo"<TD>";
+echo "<form action=delwyp.php method=POST>
+<input type=hidden name=id_przedmiotu value=$idos>
+<input type=submit name=usun value=Usun></form>";
+echo"</TD>";
+// tu dodajemy formularz do edycji osoby
+echo"<TD>";
+echo "<form action=ewyp.php method=POST>
+<input type=hidden name=id_wyposazenia value=$idos>
+<input type=submit name=Edytuj value=Edytuj></form>";
+echo"</TD>";
+echo "</TR>"; //echo "<br />";
+}
+echo "</TABLE>";
+// Tu dopiszmy now¹ osobê
+echo "<FORM action=dodwyp.php method=POST>
+Dodaj nowy wyposazenie do statku <br /> Statek:
+<input type=text name=id_statku> Przedmiot:
+<input type=text name=id_przedmiotu>  
+<input type=submit name=Dodaj
+value=Dodaj> </form>";
+$query = "select * from statek";
+$wynik = pg_query($dbh,$query);
+// odbierzmy rozmiary tabeli:
+$liczba_kolumn = pg_num_fields($wynik);
+$liczba_wierszy = pg_num_rows($wynik);
+// teraz wyœwietlmy dane
+echo "<TABLE border width=1>";
+echo "<TABLE border width=1>";
+echo "<TR>";
+for($k =0;$k<$liczba_kolumn;$k++)
+{
+echo "<TD>";
+echo pg_field_name($wynik,$k);
+echo "</TD>"; //echo "\t";
+}
+echo "<td>Usun</td><td>Edytuj</td></TR>";
+for($w =0;$w<$liczba_wierszy;$w++)
+{
+echo "<TR>";
+for($k =0;$k<$liczba_kolumn;$k++)
+{
+echo "<TD>";
+echo pg_fetch_result($wynik,$w,$k);
+echo "</TD>"; //echo "\t";
+}
+$idos = pg_fetch_result($wynik,$w,$liczba_kolumn-1);
+// tu dodajemy formularz do usuwania osoby
+echo"<TD>";
+echo "<form action=delsta.php method=POST>
+<input type=hidden name=id_statku value=$idos>
+<input type=submit name=usun value=Usun></form>";
+echo"</TD>";
+// tu dodajemy formularz do edycji osoby
+echo"<TD>";
+echo "<form action=estat.php method=POST>
+<input type=hidden name=id_statku value=$idos>
+<input type=submit name=edytuj value=Edytuj></form>";
+echo"</TD>";
+echo "</TR>"; //echo "<br />";
+}
+echo "</TABLE>";
+echo "<FORM action=dodos.php method=POST>
+Dodaj nowy statek do bazy danych <br /> Statek:
+<input type=text name=nazwa>  
+<input type=submit name=Dodaj
+value=Dodaj> </form>";
+$query = "select * from przedmioty";
+$wynik = pg_query($dbh,$query);
+// odbierzmy rozmiary tabeli:
+$liczba_kolumn = pg_num_fields($wynik);
+$liczba_wierszy = pg_num_rows($wynik);
+// teraz wyœwietlmy dane
+echo "<TABLE border width=1>";
+echo "<TABLE border width=1>";
+echo "<TR>";
+for($k =0;$k<$liczba_kolumn;$k++)
+{
+echo "<TD>";
+echo pg_field_name($wynik,$k);
+echo "</TD>"; //echo "\t";
+}
+echo "<td>Usun</td><td>Edytuj</td></TR>";
+for($w =0;$w<$liczba_wierszy;$w++)
+{
+echo "<TR>";
+for($k =0;$k<$liczba_kolumn;$k++)
+{
+echo "<TD>";
+echo pg_fetch_result($wynik,$w,$k);
+echo "</TD>"; //echo "\t";
+}
+$idos = pg_fetch_result($wynik,$w,$liczba_kolumn-1);
+// tu dodajemy formularz do usuwania osoby
+echo"<TD>";
+echo "<form action=delprz.php method=POST>
+<input type=hidden name=id_przedmiotu value=$idos>
+<input type=submit name=usun value=Usun></form>";
+echo"</TD>";
+// tu dodajemy formularz do edycji osoby
+echo"<TD>";
+echo "<form action=eprzed.php method=POST>
+<input type=hidden name=id_przedmiotu value=$idos>
+<input type=submit name=Edytuj value=Edytuj></form>";
+echo"</TD>";
+echo "</TR>"; //echo "<br />";
+}
+echo "</TABLE>";
+echo "<FORM action=dodprz.php method=POST>
+Dodaj nowy przedmiot do bazy danych <br /> Wyposazenie:
+<input type=text name=przedmiot>  
+<input type=submit name=Dodaj
+value=Dodaj> </form>";
+pg_close($dbh);
+?>
+</body>
+</html>

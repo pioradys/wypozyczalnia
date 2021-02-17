@@ -1,0 +1,30 @@
+<html>
+<head>
+<title>Usun statek</title>
+</head>
+<body>
+<h1> Usuwam statek </h1>
+<?php
+// tu umieszczamy kod skryptu
+//po pierwsze – odbierzmy parametry dla skryptu przekazane
+//metodą //POST – uzyjemy je w zapytaniu ponizej
+$id_statku = $_POST['id_statku'];
+// Połączmy się z bazą danych
+$dbh = pg_connect("dbname=projekt_pradys user=pradys
+password=bazydanych host=localhost") or die("Nie moge
+polaczyc sie z baza danych ! ");
+// tu powinno byc polaczenie
+// wykonajmy zapytanie
+$query = "DELETE FROM statek where id_statku = '$id_statku'";
+$wynik = pg_query($query);
+// sprawdzmy ile wierszy podmieniono
+$lz = pg_affected_rows($wynik);
+echo " Usunieto 1 statek <br />\n";
+pg_close($dbh);
+// zapewnijmy powrot do strony poprzedniej
+echo "<form action=main.php method=post>
+<input type=submit name=id_statku value=OK>
+</form>";
+?>
+</body>
+</html>

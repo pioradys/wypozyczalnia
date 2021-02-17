@@ -1,0 +1,32 @@
+<html>
+<head>
+<title>Dodaj wyposazenie</title>
+</head>
+<body>
+<h1> Dodaje wyposazenie</h1>
+<?php
+// tu umieszczamy kod skryptu
+//po pierwsze – odbierzmy parametry dla skryptu przekazane
+//metodą //POST – uzyjemy je w zapytaniu ponizej
+$statek = $_POST['id_statku'];
+$przedmiot = $_POST['id_przedmiotu'];
+// Połączmy się z bazą danych
+$dbh = pg_connect("dbname=projekt_pradys user=pradys
+password=bazydanych host=localhost") or die("Nie moge
+polaczyc sie z baza danych ! ");
+// tu powinno byc polaczenie
+// wykonajmy zapytanie
+$query = "INSERT INTO wyposazenie(id_statku,id_przedmiotu) VALUES
+('$statek','$przedmiot')";
+$wynik = pg_query($query);
+// sprawdzmy ile wierszy podmieniono
+$lz = pg_affected_rows($wynik);
+echo " Dodano l rekord <br /> \n";
+pg_close($dbh);
+// zapewnijmy powrot do strony poprzedniej
+echo "<form action=main.php method=post>
+<input type=submit name=id_statku value=OK>
+</form>";
+?>
+</body>
+</html>
